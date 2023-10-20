@@ -4,8 +4,20 @@ use std::path::Path;
 use std::process::Command;
 use dialoguer::{Confirm, Input};
 use url::Url;
+use colored::*;
 
 fn main() {
+    println!(
+        "{}",
+        r#"
+                      _             _            _                                     _
+   ___ _ __ ___  __ _| |_ ___      | | ___ _ __ | |_ ___  ___        ___ ___ _ __     | |___      __
+  / __| '__/ _ \/ _` | __/ _ \_____| |/ _ \ '_ \| __/ _ \/ __|_____ / __/ __| '__|____| __\ \ /\ / /
+ | (__| | |  __/ (_| | ||  __/_____| |  __/ |_) | || (_) \__ \_____| (__\__ \ | |_____| |_ \ V  V /
+  \___|_|  \___|\__,_|\__\___|     |_|\___| .__/ \__\___/|___/      \___|___/_|        \__| \_/\_/
+                                          |_|
+"#.blue());
+
     let project_name: String = Input::new()
         .with_prompt("Enter your project name")
         .interact_text()
@@ -70,4 +82,42 @@ fn setup_project(project_name: &str, use_vercel: bool) {
             fs::remove_file(vercel_path).expect("Failed to remove vercel path");
         }
     }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use std::fs::File;
+    use tempfile::TempDir;
+    use super::*;
+
+    #[test]
+    fn test_modify_file_no_file_exists() {
+        let temp_dir = TempDir::new().unwrap();
+        let file_path = temp_dir.path().join("bogus_wef.txt");
+
+        let result = std::panic::catch_unwind(|| {
+            modify_file(&file_path.to_string_lossy(), |content| {
+                content.replace("random", "test")
+            });
+        });
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_modify_file() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let file_path = temp_dir.path().join("wef.txt");
+
+        let mut file = File::create(&file_path).unwrap();
+        file.write_all(b"name = \"leptos-csr-tailwind\"").unwrap();
+
+        modify_file(&file_path.to_string_lossy(), |content| {
+            content.replace("name = \"leptos-csr-tailwind\"", "name = \"test\"")
+        });
+
+        let modified_content = fs::read_to_string(&file_path).unwrap();
+        assert_eq!(modified_content, "name = \"test\"");
+    }
+
 }
