@@ -16,12 +16,7 @@ fn main() {
         .interact()
         .unwrap();
 
-    let use_test = Confirm::new()
-        .with_prompt("Do you want to scaffold tests?")
-        .interact()
-        .unwrap();
-
-    setup_project(&project_name, use_vercel, use_test)
+    setup_project(&project_name, use_vercel)
 }
 
 fn modify_file<F: FnOnce(String) -> String>(file_path: &str, modifier: F) {
@@ -31,7 +26,7 @@ fn modify_file<F: FnOnce(String) -> String>(file_path: &str, modifier: F) {
     file.write_all(modified.as_bytes()).expect("Failed to write to file");
 }
 
-fn setup_project(project_name: &str, use_vercel: bool, use_test: bool) {
+fn setup_project(project_name: &str, use_vercel: bool) {
     let repo_url = Url::parse("https://github.com/friendlymatthew/leptos-csr-tailwind.git").unwrap();
 
     let status = Command::new("git")
@@ -62,6 +57,14 @@ fn setup_project(project_name: &str, use_vercel: bool, use_test: bool) {
     // 3. conditionally remove vercel.json
     if !use_vercel {
         let vercel_path = format!("{}/vercel.json", project_name);
+        let index_html_path = format!("{}/index.html", project_name);
+
+        modify_file(&index_html_path, |content| {
+            let target_pattern = r#"\s*<link\s+data-trunk\s+rel="copy-file"\s+href="vercel\.json"\s*/>\s*"#;
+            let re = regex::Regex::new(target_pattern).unwrap();
+            let replaced_content = re.replace_all(&content, "\n\t").to_string();
+            replaced_content
+        });
 
         if Path::new(&vercel_path).exists() {
             fs::remove_file(vercel_path).expect("Failed to remove vercel path");
