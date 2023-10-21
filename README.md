@@ -1,4 +1,4 @@
-# [`create-leptos-csr-tw`](https://crates.io/crates/create-leptos-csr-tw)
+# [create-leptos-csr-tw](https://crates.io/crates/create-leptos-csr-tw)
 
 This CLI provides a quick setup to start building web applications using the Leptos web framework integrated with TailwindCSS.
 It also includes configurations for deployment with Vercel and handling public assets.
@@ -19,6 +19,16 @@ create-leptos-csr-tw
 ```
 
 Follow the prompts to configure your project. The CLI will ask if you want to use Vercel for deployment, and if you choose so, it will generate a vercel.json for client-side routing.
+
+To run the app, simply run both:
+```bash
+npx tailwindcss -i ./input.css -o ./style/output.css --watch
+```
+and
+
+```bash
+trunk serve --open
+```
 
 
 ## Boilerplate
