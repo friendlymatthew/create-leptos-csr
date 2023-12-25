@@ -133,8 +133,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
 
 [[package]]
-name = "create-leptos-csr-tw"
-version = "0.1.0"
+name = "create-leptos-csr"
+version = "0.2.2"
 dependencies = [
  "colored",
  "dialoguer",

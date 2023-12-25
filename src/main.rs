@@ -39,7 +39,7 @@ fn modify_file<F: FnOnce(String) -> String>(file_path: &str, modifier: F) {
 }
 
 fn setup_project(project_name: &str, use_vercel: bool) {
-    let repo_url = Url::parse("https://github.com/friendlymatthew/create-leptos-csr.git").unwrap();
+    let repo_url = Url::parse("https://github.com/friendlymatthew/leptos-csr-starter-kit").unwrap();
 
     let status = Command::new("git")
         .arg("clone")

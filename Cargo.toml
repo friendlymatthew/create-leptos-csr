@@ -1,6 +1,6 @@
 [package]
-name = "create-leptos-csr-tw"
-version = "0.2.1"
+name = "create-leptos-csr"
+version = "0.2.2"
 edition = "2021"
 description = "A CLI for setting up a client-side Leptos web application with TailwindCSS."
 readme = "README.md"
