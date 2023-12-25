@@ -39,7 +39,7 @@ fn modify_file<F: FnOnce(String) -> String>(file_path: &str, modifier: F) {
 }
 
 fn setup_project(project_name: &str, use_vercel: bool) {
-    let repo_url = Url::parse("https://github.com/friendlymatthew/leptos-csr-tailwind.git").unwrap();
+    let repo_url = Url::parse("https://github.com/friendlymatthew/create-leptos-csr.git").unwrap();
 
     let status = Command::new("git")
         .arg("clone")
@@ -56,17 +56,23 @@ fn setup_project(project_name: &str, use_vercel: bool) {
     // 1. modify Cargo.toml
     let cargo_path = format!("{}/Cargo.toml", project_name);
     modify_file(&cargo_path, |content| {
-        content.replace("name = \"leptos-csr-tailwind\"", &format!("name = \"{}\"", project_name))
+        content.replace("name = \"tailwind\"", &format!("name = \"{}\"", project_name))
     });
 
-    // 2. modify app.rs
+    // 2. modify index.html
+    let index_html_path = format!("{}/index.html", project_name);
+    modify_file(&index_html_path, |content| {
+        content.replace("<title>tailwind</title>", &format!("<title>{}</title>", project_name))
+    });
+
+    // 3. modify app.rs
     let app_rs_path = format!("{}/src/app.rs", project_name);
     modify_file(&app_rs_path, |content| {
-        content.replace("<Stylesheet id=\"leptos\" href=\"/pkg/leptos-csr-tailwind.css\"/>",
+        content.replace("<Stylesheet id=\"leptos\" href=\"/pkg/tailwind.css\"/>",
                         &format!("<Stylesheet id=\"leptos\" href=\"/pkg/{}.css\"/>", project_name))
     });
 
-    // 3. conditionally remove vercel.json
+    // 4. conditionally remove vercel.json
     if !use_vercel {
         let vercel_path = format!("{}/vercel.json", project_name);
         let index_html_path = format!("{}/index.html", project_name);
