@@ -6,11 +6,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'opensans': ['Open Sans', 'sans-serif'],
         'robotomono': ['Roboto Mono', 'monospace'],
       }
     },
   },
   plugins: [],
+  darkMode: 'class',
 }
 
